@@ -1,104 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Full Website</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background-color: #f4f4f4;
-    }
-    header {
-      background-color: #222;
-      padding: 20px;
-      color: #fff;
-      text-align: center;
-    }
-    nav {
-      margin-top: 10px;
-    }
-    nav a {
-      color: #fff;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    section {
-      padding: 40px 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-    #about, #services, #portfolio, #testimonials, #contact {
-      background-color: #fff;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      margin-bottom: 20px;
-      color: #222;
-      text-align: center;
-    }
-    .cards {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-    }
-    .card {
-      background: #eee;
-      border-radius: 8px;
-      padding: 20px;
-      margin: 10px;
-      flex-basis: 300px;
-      max-width: 300px;
-    }
-    footer {
-      background-color: #222;
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-      margin-top: 40px;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      max-width: 500px;
-      margin: auto;
-    }
-    input, textarea {
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    button {
-      padding: 10px;
-      background-color: #222;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #444;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advanced Animated Website</title>
+<style>
+  @keyframes slideInLeft {
+    0% { opacity: 0; transform: translateX(-100px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideInRight {
+    0% { opacity: 0; transform: translateX(100px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes moveBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: 10000px 0; }
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+    animation: moveBackground 60s linear infinite;
+    color: #fff;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  header {
+    background-color: rgba(34,34,34,0.8);
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    text-align: center;
+    animation: fadeIn 2s ease-in-out;
+  }
+  h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    animation: slideInLeft 2s forwards;
+  }
+  nav a {
+    margin: 0 15px;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  nav a:hover {
+    color: #ffe600;
+    transform: scale(1.2);
+  }
+  section {
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: auto;
+    opacity: 0;
+    transform: translateY(50px);
+    animation: fadeIn 1.5s forwards;
+  }
+  #about {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+  }
+  #about h2,
+#services h2,
+#portfolio h2,
+#testimonials h2,
+#contact h2 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    animation: slideInLeft 1s forwards;
+  }
+  p {
+    max-width: 800px;
+    margin: auto;
+    font-size: 1.2em;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .card {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    margin: 20px;
+    padding: 20px;
+    width: 300px;
+    min-height: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 1s forwards;
+  }
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+  }
+  /* Making cards staggered on animation */
+  .card:nth-child(1) { animation-delay: 0.2s; }
+  .card:nth-child(2) { animation-delay: 0.4s; }
+  .card:nth-child(3) { animation-delay: 0.6s; }
+  /* Testimonials style */
+  #testimonials .card {
+    max-width: 500px;
+  }
+  /* Animate header elements */
+  h2 {
+    animation: slideInLeft 1s ease forwards;
+  }
+
+  /* Contact form with animated inputs */
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: auto;
+  }
+  input, textarea {
+    padding: 12px 20px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 10px #ffe600;
+  }
+  button {
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #ffe600;
+    color: #222;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background-color: #ffcc00;
+  }
+
+  /* Additional animations for sections appearing when scrolling into view */
+  /* Optional: add intersection observer or animate on scroll via JS for more advanced effect */
+
+</style>
 </head>
 <body>
 
 <header>
-  <h1>My Awesome Website</h1>
+  <h1>My Advanced Animated Website</h1>
   <nav>
     <a href="#about">About</a>
     <a href="#services">Services</a>
@@ -108,66 +181,38 @@
   </nav>
 </header>
 
-<section id="about">
+<section id="about" style="animation-delay: 0.2s;">
   <h2>About Me</h2>
-  <p style="max-width:800px; margin:auto; text-align:center;">I am a passionate web developer with a love for creating beautiful, functional websites. With years of experience, I bring ideas to life through code, design, and innovation.</p>
+  <p style="animation-delay: 0.4s;">I am a passionate developer who loves creating complex animations and interactive websites. Building something visually stunning isn't just a goal—it's a craft.</p>
 </section>
 
-<section id="services">
+<section id="services" style="animation-delay: 0.4s;">
   <h2>Services</h2>
   <div class="cards">
-    <div class="card">
-      <h3>Web Design</h3>
-      <p>Creating stunning, user-friendly websites tailored to your needs.</p>
-    </div>
-    <div class="card">
-      <h3>Development</h3>
-      <p>Building robust and scalable web applications and sites.</p>
-    </div>
-    <div class="card">
-      <h3>SEO Optimization</h3>
-      <p>Improving your site's visibility on search engines.</p>
-    </div>
+    <div class="card" style="animation-delay: 0.6s;">Web Design & Development</div>
+    <div class="card" style="animation-delay: 0.8s;">Animation & Motion Graphics</div>
+    <div class="card" style="animation-delay: 1s;">UX/UI Optimization</div>
   </div>
 </section>
 
-<section id="portfolio">
+<section id="portfolio" style="animation-delay: 0.6s;">
   <h2>My Portfolio</h2>
   <div class="cards">
-    <div class="card">
-      <h3>Project A</h3>
-      <p>A responsive e-commerce site built for a local retailer.</p>
-    </div>
-    <div class="card">
-      <h3>Project B</h3>
-      <p>A personal blog platform with custom themes.</p>
-    </div>
-    <div class="card">
-      <h3>Project C</h3>
-      <p>A portfolio website for a photographer.</p>
-    </div>
+    <div class="card" style="animation-delay: 0.8s;">Project Alpha: E-commerce</div>
+    <div class="card" style="animation-delay: 1s;">Project Beta: Portfolio Site</div>
+    <div class="card" style="animation-delay: 1.2s;">Project Gamma: Mobile App</div>
   </div>
 </section>
 
-<section id="testimonials">
+<section id="testimonials" style="animation-delay: 0.8s;">
   <h2>Testimonials</h2>
   <div class="cards">
-    <div class="card">
-      <p>"Absolutely loved the work! Highly recommended."</p>
-      <p style="text-align:right; font-weight:bold;">- Jane D.</p>
-    </div>
-    <div class="card">
-      <p>"Delivered on time and exceeded expectations."</p>
-      <p style="text-align:right; font-weight:bold;">- Mike R.</p>
-    </div>
-    <div class="card">
-      <p>"Professional and creative. Will work again."</p>
-      <p style="text-align:right; font-weight:bold;">- Sarah W.</p>
-    </div>
+    <div class="card" style="animation-delay: 1s;">"Absolutely incredible work, a true artist." - Client A</div>
+    <div class="card" style="animation-delay: 1.2s;">"Their skills took our project to the next level." - Client B</div>
   </div>
 </section>
 
-<section id="contact">
+<section id="contact" style="animation-delay: 1s;">
   <h2>Contact Me</h2>
   <form>
     <input type="text" placeholder="Your Name" required />
@@ -177,9 +222,13 @@
   </form>
 </section>
 
-<footer>
-  <p>&copy; 2024 My Full Website. All rights reserved.</p>
+<footer style="background-color: rgba(34,34,34,0.8); padding:20px; text-align:center; animation: fadeIn 2s;">
+  <p>&copy; 2024 My Advanced Animated Website. All rights reserved.</p>
 </footer>
 
+<script>
+  // Optional: crude scroll animations or reveal effects using IntersectionObserver
+  // For a truly complex site, you'd usually add JS to animate sections as they appear
+</script>
 </body>
 </html>
