@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Full Website</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #222;
+      padding: 20px;
+      color: #fff;
+      text-align: center;
+    }
+    nav {
+      margin-top: 10px;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    section {
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    #about, #services, #portfolio, #testimonials, #contact {
+      background-color: #fff;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #222;
+      text-align: center;
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    .card {
+      background: #eee;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 10px;
+      flex-basis: 300px;
+      max-width: 300px;
+    }
+    footer {
+      background-color: #222;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 500px;
+      margin: auto;
+    }
+    input, textarea {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px;
+      background-color: #222;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #444;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>My Awesome Website</h1>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section id="about">
+  <h2>About Me</h2>
+  <p style="max-width:800px; margin:auto; text-align:center;">I am a passionate web developer with a love for creating beautiful, functional websites. With years of experience, I bring ideas to life through code, design, and innovation.</p>
+</section>
+
+<section id="services">
+  <h2>Services</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Web Design</h3>
+      <p>Creating stunning, user-friendly websites tailored to your needs.</p>
+    </div>
+    <div class="card">
+      <h3>Development</h3>
+      <p>Building robust and scalable web applications and sites.</p>
+    </div>
+    <div class="card">
+      <h3>SEO Optimization</h3>
+      <p>Improving your site's visibility on search engines.</p>
+    </div>
+  </div>
+</section>
+
+<section id="portfolio">
+  <h2>My Portfolio</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Project A</h3>
+      <p>A responsive e-commerce site built for a local retailer.</p>
+    </div>
+    <div class="card">
+      <h3>Project B</h3>
+      <p>A personal blog platform with custom themes.</p>
+    </div>
+    <div class="card">
+      <h3>Project C</h3>
+      <p>A portfolio website for a photographer.</p>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <h2>Testimonials</h2>
+  <div class="cards">
+    <div class="card">
+      <p>"Absolutely loved the work! Highly recommended."</p>
+      <p style="text-align:right; font-weight:bold;">- Jane D.</p>
+    </div>
+    <div class="card">
+      <p>"Delivered on time and exceeded expectations."</p>
+      <p style="text-align:right; font-weight:bold;">- Mike R.</p>
+    </div>
+    <div class="card">
+      <p>"Professional and creative. Will work again."</p>
+      <p style="text-align:right; font-weight:bold;">- Sarah W.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>Contact Me</h2>
+  <form>
+    <input type="text" placeholder="Your Name" required />
+    <input type="email" placeholder="Your Email" required />
+    <textarea rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+<footer>
+  <p>&copy; 2024 My Full Website. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
