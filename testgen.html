@@ -838,7 +838,7 @@
                 }
                 
                 const encodedPrompt = encodeURIComponent(prompt);
-                let apiUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?model=${model}&token=${TOKEN}`;
+                let apiUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?model=${model}&token=${TOKEN}&quality=high`;
                 
                 if (imageParam) apiUrl += `&image=${imageParam}`;
                 apiUrl += `&width=${width}&height=${height}`;
