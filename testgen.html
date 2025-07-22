@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>M1Tuned Image Generator</title>
+    <style>
+        /* Custom Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: none;
+            touch-action: manipulation;
+        }
+
+        /* Custom Font */
+        @font-face {
+            font-family: 'M1TunedFont';
+            src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;500;700&display=swap');
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e6e6e6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        /* Background animation */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(100, 149, 237, 0.1);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Styled header */
+        header {
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(30, 144, 255, 0.2) 0%, rgba(0, 191, 255, 0.1) 50%, rgba(30, 144, 255, 0.2) 100%);
+            z-index: -1;
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #00ffff, #0088ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-weight: 300;
+            font-size: 1.1rem;
+            opacity: 0.8;
+            animation: pulse 4s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Generation section */
+        .generator-section {
+            background: rgba(26, 32, 44, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .generator-section:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border-color: rgba(100, 149, 237, 0.4);
+        }
+
+        /* Prompt area */
+        .prompt-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .prompt-label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #7fdbff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .prompt-label::before {
+            content: '✏️';
+        }
+
+        .prompt-input {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            color: #e6e6e6;
+            font-size: 1rem;
+            resize: none;
+            min-height: 100px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .prompt-input:focus {
+            border-color: #7fdbff;
+            box-shadow: 0 0 0 3px rgba(127, 219, 255, 0.2);
+        }
+
+        .prompt-input::placeholder {
+            color: rgba(230, 230, 230, 0.5);
+            font-style: italic;
+        }
+
+        /* Upload area */
+        .upload-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .upload-label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #7fdbff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-label::before {
+            content: '📁';
+        }
+
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 2px dashed rgba(100, 149, 237, 0.5);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            min-height: 150px;
+        }
+
+        .upload-container:hover {
+            border-color: #7fdbff;
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: rgba(100, 149, 237, 0.7);
+        }
+
+        .upload-text {
+            text-align: center;
+            color: rgba(230, 230, 230, 0.7);
+        }
+
+        .upload-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            display: none;
+            margin-top: 15px;
+        }
+
+        #imageUpload {
+            display: none;
+        }
+
+        /* Settings */
+        .settings-area {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .setting-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #a5b4fc;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .setting-input {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: #e6e6e6;
+            font-size: 0.95rem;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .setting-input:focus {
+            border-color: #7fdbff;
+            box-shadow: 0 0 0 2px rgba(127, 219, 255, 0.2);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(100, 149, 237, 0.5);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .custom-checkbox::after {
+            content: '✓';
+            color: #7fdbff;
+            font-size: 14px;
+            display: none;
+        }
+
+        input[type="checkbox"]:checked + .custom-checkbox::after {
+            display: block;
+        }
+
+        input[type="checkbox"] {
+            display: none;
+        }
+
+        input[type="checkbox"]:checked + .custom-checkbox {
+            border-color: #7fdbff;
+            background: rgba(127, 219, 255, 0.1);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 180, 219, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 180, 219, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(15, 23, 42, 0.8);
+            color: #7fdbff;
+            border: 1px solid rgba(100, 149, 237, 0.5);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: #7fdbff;
+        }
+
+        .btn-icon::before {
+            font-size: 1.1rem;
+        }
+
+        .btn-generate::before {
+            content: '✨';
+        }
+
+        .btn-reset::before {
+            content: '🔄';
+        }
+
+        .btn-download::before {
+            content: '⬇️';
+        }
+
+        /* Results */
+        .results-section {
+            display: none;
+            background: rgba(26, 32, 44, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #7fdbff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .results-title::before {
+            content: '🖼️';
+        }
+
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .generated-image {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .image-watermark {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            opacity: 0.8;
+        }
+
+        .prompt-display {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            width: 100%;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            border-left: 3px solid #7fdbff;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(100, 149, 237, 0.3);
+            border-radius: 50%;
+            border-top-color: #7fdbff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #e6e6e6;
+            font-size: 1.2rem;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        .loading-dots::after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+
+        /* Oval footer */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 32, 44, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 50% 50% 0 0 / 100%;
+            width: 300px;
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 15px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .footer-text {
+            font-size: 0.8rem;
+            color: rgba(230, 230, 230, 0.7);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .generator-section, .results-section {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            .settings-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+                min-width: 120px;
+            }
+            
+            footer {
+                width: 250px;
+                height: 50px;
+                padding-top: 12px;
+            }
+            
+            .footer-text {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            footer {
+                width: 200px;
+                height: 45px;
+                padding-top: 10px;
+            }
+        }
+
+        /* Entry animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <!-- Background animation -->
+    <div class="bg-animation">
+        <div class="bg-circle" style="width: 300px; height: 300px; top: -50px; left: -50px;"></div>
+        <div class="bg-circle" style="width: 200px; height: 200px; bottom: -30px; right: -30px;"></div>
+        <div class="bg-circle" style="width: 150px; height: 150px; top: 20%; right: 10%;"></div>
+        <div class="bg-circle" style="width: 100px; height: 100px; bottom: 15%; left: 15%;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="fade-in">
+        <div class="container">
+            <h1>M1Tuned Image Generator</h1>
+            <p class="subtitle">Create unique images with AI - Customize every detail</p>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="container">
+        <section class="generator-section fade-in delay-1">
+            <div class="prompt-area">
+                <label for="prompt" class="prompt-label">Your description</label>
+                <textarea id="prompt" class="prompt-input" placeholder="Describe the image you want to generate... Be as specific as possible for best results."></textarea>
+            </div>
+
+            <div class="upload-area">
+                <label class="upload-label">Base image (optional)</label>
+                <div class="upload-container" id="uploadContainer">
+                    <div class="upload-icon">📤</div>
+                    <div class="upload-text">Drag and drop an image here or click to select</div>
+                    <img id="uploadPreview" class="upload-preview" alt="Uploaded image preview">
+                    <input type="file" id="imageUpload" accept="image/*">
+                </div>
+            </div>
+
+            <div class="settings-area">
+                <div class="setting-group fade-in delay-2">
+                    <label for="model" class="setting-label">Model</label>
+                    <select id="model" class="setting-input">
+                        <option value="gptimage">GPT Image (default)</option>
+                        <option value="flux">Flux</option>
+                    </select>
+                </div>
+
+                <div class="setting-group fade-in delay-2">
+                    <label for="width" class="setting-label">Width (px)</label>
+                    <input type="number" id="width" class="setting-input" value="1024" min="256" max="2048">
+                </div>
+
+                <div class="setting-group fade-in delay-3">
+                    <label for="height" class="setting-label">Height (px)</label>
+                    <input type="number" id="height" class="setting-input" value="1024" min="256" max="2048">
+                </div>
+
+                <div class="setting-group fade-in delay-3">
+                    <label class="setting-label">Options</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="nologo" checked>
+                        <label for="nologo" class="custom-checkbox"></label>
+                        <label for="nologo">No logo</label>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="private" checked>
+                        <label for="private" class="custom-checkbox"></label>
+                        <label for="private">Private</label>
+                    </div>
+                </div>
+
+                <div class="setting-group fade-in delay-4">
+                    <label class="setting-label">Effects</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="transparent">
+                        <label for="transparent" class="custom-checkbox"></label>
+                        <label for="transparent">Transparent background</label>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="enhance" checked>
+                        <label for="enhance" class="custom-checkbox"></label>
+                        <label for="enhance">AI enhancement</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group fade-in delay-5">
+                <button id="generateBtn" class="btn btn-primary btn-icon btn-generate">Generate</button>
+                <button id="resetBtn" class="btn btn-secondary btn-icon btn-reset">Reset</button>
+            </div>
+        </section>
+
+        <section id="resultsSection" class="results-section">
+            <div class="results-header">
+                <h2 class="results-title">Result</h2>
+                <button id="downloadBtn" class="btn btn-primary btn-icon btn-download">Download</button>
+            </div>
+            <div class="results-container">
+                <div style="position: relative;">
+                    <img id="generatedImage" class="generated-image" alt="AI generated image">
+                    <div class="image-watermark">M1Tuned</div>
+                </div>
+                <div class="prompt-display" id="promptDisplay"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Oval footer -->
+    <footer class="fade-in delay-5">
+        <p class="footer-text">Property of M1Tuned<br>Protected by Copyright ©️ 2025</p>
+    </footer>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loader"></div>
+        <p class="loading-text">Generating your image<span class="loading-dots"></span></p>
+    </div>
+
+    <script>
+        // Configuration
+        const TOKEN = "qfOIHGxdrrUkNzBk"; // Replace with your token
+        
+        // DOM elements
+        const promptInput = document.getElementById('prompt');
+        const uploadContainer = document.getElementById('uploadContainer');
+        const imageUpload = document.getElementById('imageUpload');
+        const uploadPreview = document.getElementById('uploadPreview');
+        const generateBtn = document.getElementById('generateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const generatedImage = document.getElementById('generatedImage');
+        const promptDisplay = document.getElementById('promptDisplay');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        
+        // State variables
+        let uploadedImage = null;
+        
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            // Prevent zoom
+            document.addEventListener('gesturestart', (e) => e.preventDefault());
+            document.addEventListener('touchmove', (e) => {
+                if (e.scale !== 1) e.preventDefault();
+            }, { passive: false });
+            
+            // Image upload handling
+            uploadContainer.addEventListener('click', () => imageUpload.click());
+            
+            imageUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file && file.type.match('image.*')) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        uploadedImage = event.target.result;
+                        uploadPreview.src = uploadedImage;
+                        uploadPreview.style.display = 'block';
+                        uploadContainer.querySelector('.upload-icon').style.display = 'none';
+                        uploadContainer.querySelector('.upload-text').style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Drag and drop
+            uploadContainer.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadContainer.style.borderColor = '#7fdbff';
+                uploadContainer.style.background = 'rgba(15, 23, 42, 0.7)';
+            });
+            
+            uploadContainer.addEventListener('dragleave', () => {
+                uploadContainer.style.borderColor = 'rgba(100, 149, 237, 0.5)';
+                uploadContainer.style.background = 'rgba(15, 23, 42, 0.3)';
+            });
+            
+            uploadContainer.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadContainer.style.borderColor = 'rgba(100, 149, 237, 0.5)';
+                uploadContainer.style.background = 'rgba(15, 23, 42, 0.3)';
+                
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.match('image.*')) {
+                    imageUpload.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    imageUpload.dispatchEvent(event);
+                }
+            });
+            
+            // Image generation
+            generateBtn.addEventListener('click', generateImage);
+            
+            // Reset
+            resetBtn.addEventListener('click', resetForm);
+            
+            // Download
+            downloadBtn.addEventListener('click', downloadImage);
+            
+            // Context menu for mobile
+            generatedImage.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showImageActions();
+            });
+            
+            // Enter key to generate
+            promptInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    generateImage();
+                }
+            });
+        });
+        
+        // Function to generate image
+        async function generateImage() {
+            const prompt = promptInput.value.trim();
+            if (!prompt) {
+                alert('Please enter a description to generate an image.');
+                return;
+            }
+            
+            // Show loading
+            loadingOverlay.style.display = 'flex';
+            
+            try {
+                // Get settings
+                const model = document.getElementById('model').value;
+                const width = document.getElementById('width').value;
+                const height = document.getElementById('height').value;
+                const nologo = document.getElementById('nologo').checked;
+                const privateImg = document.getElementById('private').checked;
+                const transparent = document.getElementById('transparent').checked;
+                const enhance = document.getElementById('enhance').checked;
+                
+                // Build URL
+                let imageParam = '';
+                if (uploadedImage) {
+                    imageParam = encodeURIComponent(uploadedImage);
+                }
+                
+                const encodedPrompt = encodeURIComponent(prompt);
+                let apiUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?model=${model}&token=${TOKEN}`;
+                
+                if (imageParam) apiUrl += `&image=${imageParam}`;
+                apiUrl += `&width=${width}&height=${height}`;
+                apiUrl += `&nologo=${nologo}&private=${privateImg}`;
+                apiUrl += `&transparent=${transparent}&enhance=${enhance}`;
+                
+                // Generate image
+                generatedImage.src = apiUrl;
+                
+                // Wait for image to load
+                await new Promise((resolve) => {
+                    generatedImage.onload = resolve;
+                    generatedImage.onerror = () => {
+                        loadingOverlay.style.display = 'none';
+                        alert('An error occurred while generating the image. Please try again.');
+                        throw new Error('Image loading error');
+                    };
+                });
+                
+                // Add watermark in base64
+                await addWatermark();
+                
+                // Show results
+                promptDisplay.textContent = prompt;
+                resultsSection.style.display = 'block';
+                
+                // Scroll to results
+                setTimeout(() => {
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+        
+        // Function to add watermark to image
+        async function addWatermark() {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                img.crossOrigin = 'Anonymous';
+                img.src = generatedImage.src;
+                
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Add M1Tuned text
+                    ctx.font = `bold ${Math.max(20, img.width / 20)}px Arial`;
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText('M1Tuned', img.width - 20, img.height - 20);
+                    
+                    // Update image
+                    generatedImage.src = canvas.toDataURL('image/png');
+                    resolve();
+                };
+                
+                img.onerror = () => {
+                    console.warn('Could not add watermark');
+                    resolve();
+                };
+            });
+        }
+        
+        // Function to download image
+        function downloadImage() {
+            if (!generatedImage.src) return;
+            
+            const link = document.createElement('a');
+            link.href = generatedImage.src;
+            link.download = `m1tuned-image-${Date.now()}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Function to reset form
+        function resetForm() {
+            promptInput.value = '';
+            imageUpload.value = '';
+            uploadPreview.src = '';
+            uploadPreview.style.display = 'none';
+            uploadContainer.querySelector('.upload-icon').style.display = 'block';
+            uploadContainer.querySelector('.upload-text').style.display = 'block';
+            uploadedImage = null;
+            
+            // Reset settings
+            document.getElementById('model').value = 'gptimage';
+            document.getElementById('width').value = '1024';
+            document.getElementById('height').value = '1024';
+            document.getElementById('nologo').checked = true;
+            document.getElementById('private').checked = true;
+            document.getElementById('transparent').checked = false;
+            document.getElementById('enhance').checked = true;
+            
+            // Hide results
+            resultsSection.style.display = 'none';
+        }
+        
+        // Function to show image actions (mobile)
+        function showImageActions() {
+            if (!generatedImage.src) return;
+            
+            // Create custom context menu
+            const menu = document.createElement('div');
+            menu.style.position = 'fixed';
+            menu.style.bottom = '20px';
+            menu.style.left = '50%';
+            menu.style.transform = 'translateX(-50%)';
+            menu.style.background = 'rgba(26, 32, 44, 0.9)';
+            menu.style.backdropFilter = 'blur(10px)';
+            menu.style.borderRadius = '12px';
+            menu.style.padding = '15px';
+            menu.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.3)';
+            menu.style.zIndex = '1000';
+            menu.style.display = 'flex';
+            menu.style.flexDirection = 'column';
+            menu.style.gap = '10px';
+            menu.style.minWidth = '200px';
+            
+            // Menu options
+            const downloadOption = document.createElement('div');
+            downloadOption.textContent = 'Download';
+            downloadOption.style.padding = '10px';
+            downloadOption.style.borderRadius = '8px';
+            downloadOption.style.cursor = 'pointer';
+            downloadOption.style.transition = 'background 0.2s';
+            downloadOption.addEventListener('click', () => {
+                downloadImage();
+                document.body.removeChild(menu);
+            });
+            downloadOption.addEventListener('mouseover', () => {
+                downloadOption.style.background = 'rgba(100, 149, 237, 0.3)';
+            });
+            downloadOption.addEventListener('mouseout', () => {
+                downloadOption.style.background = 'transparent';
+            });
+            
+            const shareOption = document.createElement('div');
+            shareOption.textContent = 'Share';
+            shareOption.style.padding = '10px';
+            shareOption.style.borderRadius = '8px';
+            shareOption.style.cursor = 'pointer';
+            shareOption.style.transition = 'background 0.2s';
+            shareOption.addEventListener('click', () => {
+                shareImage();
+                document.body.removeChild(menu);
+            });
+            shareOption.addEventListener('mouseover', () => {
+                shareOption.style.background = 'rgba(100, 149, 237, 0.3)';
+            });
+            shareOption.addEventListener('mouseout', () => {
+                shareOption.style.background = 'transparent';
+            });
+            
+            const copyOption = document.createElement('div');
+            copyOption.textContent = 'Copy link';
+            copyOption.style.padding = '10px';
+            copyOption.style.borderRadius = '8px';
+            copyOption.style.cursor = 'pointer';
+            copyOption.style.transition = 'background 0.2s';
+            copyOption.addEventListener('click', () => {
+                navigator.clipboard.writeText(generatedImage.src)
+                    .then(() => alert('Link copied to clipboard!'))
+                    .catch(() => alert('Could not copy link'));
+                document.body.removeChild(menu);
+            });
+            copyOption.addEventListener('mouseover', () => {
+                copyOption.style.background = 'rgba(100, 149, 237, 0.3)';
+            });
+            copyOption.addEventListener('mouseout', () => {
+                copyOption.style.background = 'transparent';
+            });
+            
+            const cancelOption = document.createElement('div');
+            cancelOption.textContent = 'Cancel';
+            cancelOption.style.padding = '10px';
+            cancelOption.style.borderRadius = '8px';
+            cancelOption.style.cursor = 'pointer';
+            cancelOption.style.transition = 'background 0.2s';
+            cancelOption.style.marginTop = '5px';
+            cancelOption.style.color = 'rgba(230, 230, 230, 0.7)';
+            cancelOption.addEventListener('click', () => {
+                document.body.removeChild(menu);
+            });
+            cancelOption.addEventListener('mouseover', () => {
+                cancelOption.style.background = 'rgba(255, 255, 255, 0.1)';
+            });
+            cancelOption.addEventListener('mouseout', () => {
+                cancelOption.style.background = 'transparent';
+            });
+            
+            // Add options to menu
+            menu.appendChild(downloadOption);
+            menu.appendChild(shareOption);
+            menu.appendChild(copyOption);
+            menu.appendChild(cancelOption);
+            
+            // Add menu to DOM
+            document.body.appendChild(menu);
+            
+            // Close menu when clicking outside
+            const closeMenu = (e) => {
+                if (!menu.contains(e.target)) {
+                    document.body.removeChild(menu);
+                    document.removeEventListener('click', closeMenu);
+                }
+            };
+            
+            setTimeout(() => {
+                document.addEventListener('click', closeMenu);
+            }, 100);
+        }
+        
+        // Function to share image
+        function shareImage() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Image generated by M1Tuned',
+                    text: promptInput.value,
+                    url: generatedImage.src
+                }).catch(console.error);
+            } else {
+                alert('Share function is not available on your device. You can copy the link manually.');
+            }
+        }
+    </script>
+</body>
+</html>
